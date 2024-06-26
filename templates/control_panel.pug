@@ -1,5 +1,5 @@
 case table
-  when "productionTypes"
+  when "productiontypes"
     if perms.includes(4)
       hr
       table#control_panel(hx-target="#sql_table")
@@ -44,7 +44,7 @@ case table
           })
         })
       
-  when "defectTypes"
+  when "defecttypes"
     if perms.includes(4)
       hr
       table#control_panel(hx-target="#sql_table")
@@ -72,7 +72,7 @@ case table
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({query: `
-              SELECT * FROM productionTypes
+              SELECT * FROM productiontypes
             `})
           })
           .then(async (res) => {
@@ -145,7 +145,7 @@ case table
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({query: `
-              SELECT * FROM productionTypes
+              SELECT * FROM productiontypes
             `})
           })
           .then(async (res) => {
@@ -190,7 +190,7 @@ case table
           })
         })
 
-  when "productionReady"
+  when "productionready"
     if perms.includes(2)
       hr
       table#control_panel(hx-target="#sql_table")
@@ -224,7 +224,7 @@ case table
             },
             body: JSON.stringify({query: `
               SELECT p.id, p.name FROM production p
-              INNER JOIN productionTypes pt
+              INNER JOIN productiontypes pt
               ON p.type = pt.id
               WHERE pt.id = ${dropdown.value}
             `})
@@ -249,7 +249,7 @@ case table
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({query: `
-              SELECT * FROM productionTypes
+              SELECT * FROM productiontypes
             `})
           })
           .then(async (res) => {
@@ -339,7 +339,7 @@ case table
             },
             body: JSON.stringify({query: `
               SELECT p.id, p.name FROM production p
-              INNER JOIN productionTypes pt
+              INNER JOIN productiontypes pt
               ON p.type = pt.id
               WHERE pt.id = ${dropdown.value}
             `})
@@ -362,8 +362,8 @@ case table
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({query: `
-              SELECT dt.id, dt.name FROM defectTypes dt
-              INNER JOIN productionTypes pt
+              SELECT dt.id, dt.name FROM defecttypes dt
+              INNER JOIN productiontypes pt
               ON dt.prod_type = pt.id
               WHERE pt.id = ${dropdown.value}
             `})
@@ -388,7 +388,7 @@ case table
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({query: `
-              SELECT * FROM productionTypes
+              SELECT * FROM productiontypes
             `})
           })
           .then(async (res) => {
