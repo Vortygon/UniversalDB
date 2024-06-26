@@ -1,0 +1,32 @@
+CREATE TABLE IF NOT EXISTS `productionTypes` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS `production` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `type` BIGINT UNSIGNED NOT NULL,
+    FOREIGN KEY (`type`) REFERENCES `productionTypes`(`id`)
+);
+CREATE TABLE IF NOT EXISTS `defectTypes` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `prod_type` BIGINT UNSIGNED NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    FOREIGN KEY (`prod_type`) REFERENCES `productionTypes`(`id`)
+);
+CREATE TABLE IF NOT EXISTS `productionReady` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `product` BIGINT UNSIGNED NOT NULL,
+    `count` BIGINT NOT NULL,
+    `timestamp` DATETIME NOT NULL,
+    FOREIGN KEY (`product`) REFERENCES `production`(`id`)
+);
+CREATE TABLE IF NOT EXISTS `defects` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `product` BIGINT UNSIGNED NOT NULL,
+    `defect` BIGINT UNSIGNED NOT NULL,
+    `count` BIGINT NOT NULL,
+    `timestamp` DATETIME NOT NULL,
+    FOREIGN KEY (`product`) REFERENCES `production`(`id`),
+    FOREIGN KEY (`defect`) REFERENCES `defectTypes`(`id`)
+);

@@ -1,0 +1,84 @@
+div#content
+	h1= title
+	div#controls
+		include date_bar
+		include control_panel
+		hr
+	div
+		block test_table
+		if table == 'productionReady' || table == 'defects'
+			hr
+			p Общая сводка
+			block additional_table
+	hr
+	div#download_panel Сохранить отчет:
+		select#save_dropdown(name="save_dropdown")
+			option(value="" selected hidden) Формат
+			option(value="csv") .csv
+			option(value="xlsx") .xlsx
+			option(value="pdf") .pdf
+
+script. 
+	dropdown_download = document.getElementById('save_dropdown')
+	def_option = Array.from(dropdown_download).find(item => item.text === 'Формат');
+	dropdown_download.addEventListener('change', (event) => {
+		download(event.target.value)
+		def_option.selected = true
+		dropdown.value = ""
+	})
+	function download(format) {
+		fetch("/sql/#{table}/download?format=" + format, {
+			method: 'GET'
+		})
+	}
+
+style. 
+	button {
+		width: fit-content;
+	}
+	#date_bar, #control_panel, #download_panel {
+		display: flex; 
+		gap: 1rem;
+		height: 3rem;
+		align-items: center;
+	}
+	#control_panel {
+		flex-direction: column;
+		align-items: initial;
+		width: 100%;
+		height: fit-content;
+		padding: 0;
+		margin: 0;
+	}
+	#control_panel * {
+		margin: 0;
+		//- margin-top: 0.2rem;
+		border: none;
+	}
+	#control_panel input {
+		max-width: 20rem;
+	}
+	input, #save_dropdown {
+		margin: 0;
+		padding: 0.8rem 1rem;
+		border: none;
+	}
+	#sql_table, #sql_table2, td {
+		width: 100%;
+		border-collapse: collapse;
+		border: 1px solid gray;
+		padding: 0.3rem 1rem;
+		margin: 1.5rem 0;
+	}
+	td {
+		width: fit-content;
+	}
+	.inline {
+		display: flex;
+		gap: 0.5rem;
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		border: none;
+		outline: none;
+	}

@@ -1,0 +1,16 @@
+extends test
+
+block test_table
+  table#sql_table(hx-get=`/sql/${table}`, hx-trigger="load")
+
+block additional_table
+  table#sql_table2(hx-get=`/sql/${table}Combined`, hx-trigger="load")
+  script.
+    document.querySelector('#sql_table').addEventListener('change', () => {
+      alert('da')
+      //- await fetch("/sql/${table}Combined")
+      //- .then(res => {
+      //-   console.log('da', res)
+      //-   document.getElementById('sql_table2').innerHTML = res.body
+      //- })
+    })

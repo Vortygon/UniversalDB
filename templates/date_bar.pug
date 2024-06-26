@@ -1,0 +1,30 @@
+if table == "productionReady" || table == "defects"
+	hr
+	div#date_bar 
+		div Период отчетности:
+		div от: 
+		input#date_from(type="datetime-local")
+		div до:
+		input#date_to(type="datetime-local")
+		button(hx-get=`/sql/${table}` hx-target="#sql_table") Составить отчет
+	script.
+		function toIsoString(date) {
+			var tzo = -date.getTimezoneOffset(),
+					dif = tzo >= 0 ? '+' : '-',
+					pad = function(num) {
+							return (num < 10 ? '0' : '') + num;
+					};
+
+			return date.getFullYear() +
+					'-' + pad(date.getMonth() + 1) +
+					'-' + pad(date.getDate()) +
+					'T' + pad(date.getHours()) +
+					':' + pad(date.getMinutes()) +
+					':' + pad(date.getSeconds()) +
+					dif + pad(Math.floor(Math.abs(tzo) / 60)) +
+					':' + pad(Math.abs(tzo) % 60);
+		}
+
+		var dt = new Date();
+		document.getElementById('date_from').value = toIsoString(dt).slice(0, 16)
+		document.getElementById('date_to').value = toIsoString(dt).slice(0, 16)

@@ -1,0 +1,477 @@
+case table
+  when "productionTypes"
+    if perms.includes(4)
+      hr
+      table#control_panel(hx-target="#sql_table")
+        tr.inline
+          td Добавить:
+          td.inline Продукт
+            input#query_input(type="text" placeholder="Название")
+            button(hx-get=`/sql/${table}`)#query_button Добавить
+        tr.inline
+          td Удалить:
+          td.inline Продукт
+            input#query_input_del(type="text" placeholder="ID")
+            button#query_button_del(hx-get=`/sql/${table}`) Удалить
+
+      script. 
+        query = document.getElementById('query_input')
+        query_del = document.getElementById('query_input_del')
+        document.getElementById('query_button').addEventListener('click', async (event) => {
+          resetIncrement()
+          const response = await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              INSERT INTO #{table} (name)
+              VALUES ('${query.value}')
+            `})
+          })
+        })
+        document.getElementById('query_button_del').addEventListener('click', async (event) => {
+          resetIncrement()
+          const response = await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              DELETE FROM #{table}
+              WHERE id = ${query_del.value}
+            `})
+          })
+        })
+      
+  when "defectTypes"
+    if perms.includes(4)
+      hr
+      table#control_panel(hx-target="#sql_table")
+        tr.inline
+          td Добавить:
+          td.inline Продукт
+            input#query_input(type="text" placeholder="Название")
+            select#query_drop
+              option(value="1" selected hidden) Тип продукции
+            button#query_button(hx-get=`/sql/${table}`) Добавить
+        tr.inline
+          td Удалить:
+          td.inline Продукт
+            input#query_input_del(type="text" placeholder="ID")
+            button#query_button_del(hx-get=`/sql/${table}`) Удалить
+
+      script. 
+        dropdown = document.getElementById('query_drop')
+        dropdown.addEventListener('focus', async (event) => {
+          let options = document.querySelectorAll('#query_drop option')
+          options.forEach(o => o.remove())
+          await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              SELECT * FROM productionTypes
+            `})
+          })
+          .then(async (res) => {
+            const data = await res.json()
+            console.log(data)
+            data.forEach(el => {
+              const option = document.createElement('option')
+              option.innerHTML = el.name
+              option.value = el.id
+              dropdown.appendChild(option)
+            })
+          })
+        })
+
+    script. 
+      query = document.getElementById('query_input')
+      query_del = document.getElementById('query_input_del')
+      document.getElementById('query_button').addEventListener('click', async (event) => {
+        resetIncrement()
+        const response = await fetch("/sql/query", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({query: `
+            INSERT INTO #{table} (name, prod_type)
+            VALUES ('${query.value}', ${query_drop.value})
+          `})
+        })
+      })
+      document.getElementById('query_button_del').addEventListener('click', async (event) => {
+        resetIncrement()
+        const response = await fetch("/sql/query", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({query: `
+            DELETE FROM #{table}
+            WHERE id = ${query_del.value}
+          `})
+        })
+      })
+
+  when "production"
+    if perms.includes(4)
+      hr
+      table#control_panel(hx-target="#sql_table")
+        tr.inline
+          td Добавить:
+          td.inline Продукт
+            input#query_input(type="text" placeholder="Название")
+            select#query_drop
+              option(value="1" selected hidden) Тип продукции
+            button#query_button(hx-get=`/sql/${table}`) Добавить
+        tr.inline
+          td Удалить:
+          td.inline Продукт
+            input#query_input_del(type="text" placeholder="ID")
+            button#query_button_del(hx-get=`/sql/${table}`) Удалить
+
+      script. 
+        dropdown = document.getElementById('query_drop')
+        dropdown.addEventListener('focus', async (event) => {
+          let options = document.querySelectorAll('#query_drop option')
+          options.forEach(o => o.remove())
+          await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              SELECT * FROM productionTypes
+            `})
+          })
+          .then(async (res) => {
+            const data = await res.json()
+            console.log(data)
+            data.forEach(el => {
+              const option = document.createElement('option')
+              option.innerHTML = el.name
+              option.value = el.id
+              dropdown.appendChild(option)
+            })
+          })
+        })
+
+      script. 
+        query = document.getElementById('query_input')
+        query_del = document.getElementById('query_input_del')
+        document.getElementById('query_button').addEventListener('click', async (event) => {
+          resetIncrement()
+          const response = await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              INSERT INTO #{table} (name, type)
+              VALUES ('${query.value}', ${query_drop.value})
+            `})
+          })
+        })
+        document.getElementById('query_button_del').addEventListener('click', async (event) => {
+          resetIncrement()
+          const response = await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              DELETE FROM #{table}
+              WHERE id = ${query_del.value}
+            `})
+          })
+        })
+
+  when "productionReady"
+    if perms.includes(2)
+      hr
+      table#control_panel(hx-target="#sql_table")
+        tr.inline
+          td Добавить:
+          td.inline Продукт
+            select#query_drop
+              option(value="1" selected hidden) Тип продукции
+            select#query_drop2
+              option(value="1" selected hidden) Продукт
+            input#query_input(type="text" placeholder="Количество")
+            input#query_date(type="datetime-local")
+            button#query_button(hx-get=`/sql/${table}`) Добавить
+        tr.inline
+          td Удалить:
+          td.inline Продукт
+            input#query_input_del(type="text" placeholder="ID")
+            button#query_button_del(hx-get=`/sql/${table}`) Удалить
+
+      script. 
+        document.getElementById('query_date').value = toIsoString(new Date()).slice(0, 16)
+        dropdown = document.getElementById('query_drop')
+        dropdown2 = document.getElementById('query_drop2')
+        async function updt() {
+          let options = document.querySelectorAll('#query_drop2 option')
+          options.forEach(o => o.remove())
+          await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              SELECT p.id, p.name FROM production p
+              INNER JOIN productionTypes pt
+              ON p.type = pt.id
+              WHERE pt.id = ${dropdown.value}
+            `})
+          })
+          .then(async (res) => {
+            const data = await res.json()
+            console.log(data)
+            data.forEach(el => {
+              const option = document.createElement('option')
+              option.innerHTML = el.name
+              option.value = el.id
+              dropdown2.appendChild(option)
+            })
+          })
+        }
+        dropdown.addEventListener('focus', async (event) => {
+          let options = document.querySelectorAll('#query_drop option')
+          options.forEach(o => o.remove())
+          await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              SELECT * FROM productionTypes
+            `})
+          })
+          .then(async (res) => {
+            const data = await res.json()
+            console.log(data)
+            data.forEach(el => {
+              const option = document.createElement('option')
+              option.innerHTML = el.name
+              option.value = el.id
+              dropdown.appendChild(option)
+            })
+            updt()
+          })
+        })
+        dropdown.addEventListener('change', async (event) => {
+          updt()
+        })
+
+      script. 
+        query = document.getElementById('query_input')
+        query_del = document.getElementById('query_input_del')
+        document.getElementById('query_button').addEventListener('click', async (event) => {
+          query_date = new Date(document.getElementById('query_date').value)
+          timestamp = toIsoString(query_date).slice(0, 16)
+          console.log(query_date, timestamp)
+          resetIncrement()
+          if (!query.value) query.value = 1
+          const response = await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              INSERT INTO #{table} (product, count, timestamp)
+              VALUES (${query_drop2.value}, ${query.value}, '${timestamp}')
+            `})
+          })
+        })
+        document.getElementById('query_button_del').addEventListener('click', async (event) => {
+          resetIncrement()
+          const response = await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              DELETE FROM #{table}
+              WHERE id = ${query_del.value}
+            `})
+          })
+        })
+
+  when "defects"
+    if perms.includes(4)
+      hr
+      table#control_panel(hx-target="#sql_table")
+        tr.inline
+          td Добавить:
+          td.inline Продукт
+            select#query_drop
+              option(value="1" selected hidden) Тип продукции
+            select#query_drop2
+              option(value="1" selected hidden) Продукт
+            select#query_drop3
+              option(value="1" selected hidden) Дефект
+            input#query_input(type="text" placeholder="Количество")
+            input#query_date(type="datetime-local")
+            button#query_button(hx-get=`/sql/${table}`) Добавить
+        tr.inline
+          td Удалить:
+          td.inline Продукт
+            input#query_input_del(type="text" placeholder="ID")
+            button#query_button_del(hx-get=`/sql/${table}`) Удалить
+
+      script. 
+        document.getElementById('query_date').value = toIsoString(new Date()).slice(0, 16)
+        dropdown = document.getElementById('query_drop')
+        dropdown2 = document.getElementById('query_drop2')
+        dropdown3 = document.getElementById('query_drop3')
+        async function updt() {
+          let options = document.querySelectorAll('#query_drop2 option')
+          options.forEach(o => o.remove())
+          await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              SELECT p.id, p.name FROM production p
+              INNER JOIN productionTypes pt
+              ON p.type = pt.id
+              WHERE pt.id = ${dropdown.value}
+            `})
+          })
+          .then(async (res) => {
+            const data = await res.json()
+            console.log(data)
+            data.forEach(el => {
+              const option = document.createElement('option')
+              option.innerHTML = el.name
+              option.value = el.id
+              dropdown2.appendChild(option)
+            })
+          })
+          options = document.querySelectorAll('#query_drop3 option')
+          options.forEach(o => o.remove())
+          await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              SELECT dt.id, dt.name FROM defectTypes dt
+              INNER JOIN productionTypes pt
+              ON dt.prod_type = pt.id
+              WHERE pt.id = ${dropdown.value}
+            `})
+          })
+          .then(async (res) => {
+            const data = await res.json()
+            console.log(data)
+            data.forEach(el => {
+              const option = document.createElement('option')
+              option.innerHTML = el.name
+              option.value = el.id
+              dropdown3.appendChild(option)
+            })
+          })
+        }
+        dropdown.addEventListener('focus', async (event) => {
+          let options = document.querySelectorAll('#query_drop option')
+          options.forEach(o => o.remove())
+          await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              SELECT * FROM productionTypes
+            `})
+          })
+          .then(async (res) => {
+            const data = await res.json()
+            console.log(data)
+            data.forEach(el => {
+              const option = document.createElement('option')
+              option.innerHTML = el.name
+              option.value = el.id
+              dropdown.appendChild(option)
+            })
+            updt()
+          })
+        })
+        dropdown.addEventListener('change', async (event) => {
+          updt()
+        })
+
+      script. 
+        query = document.getElementById('query_input')
+        query_del = document.getElementById('query_input_del')
+        document.getElementById('query_button').addEventListener('click', async (event) => {
+          query_date = new Date(document.getElementById('query_date').value)
+          timestamp = toIsoString(query_date).slice(0, 16)
+          console.log(query_date, timestamp)
+          resetIncrement()
+          if (!query.value) query.value = 1
+          const response = await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              INSERT INTO #{table} (product, count, defect, timestamp)
+              VALUES (${query_drop2.value}, ${query.value}, ${query_drop3.value}, '${timestamp}')
+            `})
+          })
+        })
+        document.getElementById('query_button_del').addEventListener('click', async (event) => {
+          resetIncrement()
+          const response = await fetch("/sql/query", {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({query: `
+              DELETE FROM #{table}
+              WHERE id = ${query_del.value}
+            `})
+          })
+        })
+    -break
+
+if perms
+  script. 
+    function resetIncrement() {
+      fetch("/sql/query", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({query: `
+          ALTER TABLE #{table} AUTO_INCREMENT = 1
+        `})
+      })
+    }
+    document.addEventListener('htmx:afterRequest', (e) => {
+      resetIncrement()
+    })
+
+    function toIsoString(date) {
+      var tzo = -date.getTimezoneOffset(),
+          dif = tzo >= 0 ? '+' : '-',
+          pad = function(num) {
+              return (num < 10 ? '0' : '') + num;
+          };
+
+      return date.getFullYear() +
+          '-' + pad(date.getMonth() + 1) +
+          '-' + pad(date.getDate()) +
+          'T' + pad(date.getHours()) +
+          ':' + pad(date.getMinutes()) +
+          ':' + pad(date.getSeconds()) +
+          dif + pad(Math.floor(Math.abs(tzo) / 60)) +
+          ':' + pad(Math.abs(tzo) % 60);
+    }

@@ -1,0 +1,45 @@
+h1(id="title")= title 
+
+hr
+
+div#content(class="login")
+  p Войти в базу данных
+  div(id="error")
+  input(id="login" placeholder="Логин")
+  input(id="password" placeholder="Пароль" type="password")
+  button(id="submit") Войти
+
+script.
+  document.getElementById('tabs').style.display = "none"
+  document.getElementById('submit').addEventListener('click', async () => {
+
+    const login = document.getElementById('login').value
+    const password = document.getElementById('password').value
+
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ login, password })
+      })
+
+      if (!response.ok) {
+        document.getElementById('error').innerHTML = "Ошибка входа. Проверьте корректность введенных данных."
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      // alert('Login successful!');
+      // Перенаправление на защищенную страницу
+      document.cookie = `token=${data.token}; path=/`
+      window.location.href = `/`
+    }
+    catch (error) {
+      document.getElementById('error').innerHTML = "Ошибка входа. Проверьте корректность введенных данных."
+      // alert('Error: ' + error.message);
+    }
+
+  })
+

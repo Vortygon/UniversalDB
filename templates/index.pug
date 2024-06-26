@@ -1,0 +1,44 @@
+doctype html
+html
+head
+  script(src="https://unpkg.com/htmx.org@2.0.0")
+  script(src="https://unpkg.com/mustache@latest")
+  title= title
+  link(rel='stylesheet', href='style.css')
+
+body 
+  div(id="tabs" hx-target="#root" hx-push-url="true")
+    if user
+      div#usr(style="align-self: center; margin: 0 1rem;") Вы вошли как 
+        span(style="font-weight: 700;") #{user}
+    div(class="tab" hx-get="/login" id="login_tab") Войти
+    if perms
+      if perms.includes(1)
+        div(class="tab" hx-get="/production") Готовая продукция
+        div(class="tab" hx-get="/defects") Брак
+      if perms.includes(3)
+        div(class="tab" hx-get="/production_list") Список продукции
+        div(class="tab" hx-get="/production_types") Типы продукции
+        div(class="tab" hx-get="/defect_types") Типы дефектов
+  div(id="root" hx-get=`${content}` hx-trigger="load")
+    block content
+
+
+script.
+  document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      document.getElementById('login_tab').remove()
+      const logout = document.createElement('div')
+      logout.classList.add('tab')
+      logout.innerHTML = 'Выйти'
+      logout.addEventListener('click', async () => {
+        await fetch('/logout', {method: 'POST'})
+        localStorage.removeItem('token')
+        document.cookie = 'token=; Max-Age=0; path=/';
+        window.location.href = '/login'
+      })
+      document.getElementById('tabs').appendChild(logout)
+    }
+  });
+

@@ -1,0 +1,130 @@
+* {
+  font-size: 13pt;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #111;
+  color: white;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  padding: 3rem;
+  height: fit-content;
+}
+
+#root, #tabs {
+  padding: 1.5rem 2.5rem;
+  background-color: #222;
+  border-radius: 25px;
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+#tabs {
+  position: sticky;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  overflow: scroll;
+  text-wrap: nowrap;
+}
+
+#tabs::-webkit-scrollbar {
+  display: none;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 70%;
+  height: fit-content;
+}
+
+h1, #content {
+  margin: 0 0.5rem;
+  font-size: 24pt;
+}
+
+hr {
+  border-color: gray;
+  width: 100%;
+}
+
+#content {
+  display: flex;
+  margin-top: 1.5rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  flex-grow: 1;
+  align-self: center;
+  justify-content: center;
+  height: fit-content;
+}
+
+.login {
+  max-width: 25rem;
+}
+
+.tab, button, select {
+  color: white;
+  display: block;
+  background: #444;
+  padding: 0.7rem 1rem;
+  border-radius: 0.7em;
+  min-width: 4rem;
+  width: fit-content;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.tab:hover, button:hover {
+  background: #666;
+}
+
+input, button {
+  border: none;
+  border-radius: 10px;
+  background: #333;
+  color: white;
+  resize: none;
+  padding: 0.6rem 1rem;
+  
+  align-content: center;
+  padding-left: 1rem;
+}
+
+button {
+  /* margin-top: 0.5rem; */
+  padding: 0.8rem 1rem;
+  background: #444;
+  width: 100%;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+p, #error {
+  margin: 0;
+  margin-bottom: 0.7rem;
+  text-align: center;
+}
+
+#error {
+  color: rgb(241, 108, 108);
+}
+
+p {
+  font-weight: 500;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+select {
+  border: none;
+}

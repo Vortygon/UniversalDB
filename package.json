@@ -1,0 +1,23 @@
+{
+  "name": "universal_db_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "main": "nodemon ."
+  },
+  "author": "vortygon",
+  "license": "GLWTPL",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "exceljs": "^4.4.0",
+    "express": "^4.19.2",
+    "json2csv": "^6.0.0-alpha.2",
+    "jsonwebtoken": "^9.0.2",
+    "mustache": "^4.2.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.10.1",
+    "pdfkit": "^0.15.0",
+    "pug": "^3.0.3"
+  }
+}

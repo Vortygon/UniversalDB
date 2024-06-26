@@ -1,0 +1,50 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="style.css">
+  <!-- <script src="script.js"></script> -->
+  <script src="https://unpkg.com/htmx.org@2.0.0"></script>
+  <script src="https://unpkg.com/mustache@latest"></script>
+  <title>{{title}}</title>
+</head>
+
+<body>
+  <div id="tabs">
+    <div class="tab" hx-get="/login" hx-target="#root" hx-push-url="true" id="login_tab">Войти</div>
+    <div class="tab" hx-get="/test" hx-target="#root" hx-push-url="true">Тест</div>
+  </div>
+  <div id="root">
+  </div>
+  <script id="template" type="x-tmpl-mustache">
+    {{template}}
+  </script>
+</body>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      document.getElementById('login_tab').remove()
+      const logout = document.createElement('div')
+      logout.classList.add('tab')
+      logout.innerHTML = 'Выйти'
+      logout.addEventListener('click', () => {
+        localStorage.removeItem('token')
+        document.cookie = 'token=; Max-Age=0; path=/';
+        window.location.href = '/logout'
+      })
+      document.getElementById('tabs').appendChild(logout)
+    }
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const template = document.getElementById('template').innerHTML
+    const rendered = Mustache.render(template)
+    document.getElementById('root').innerHTML = rendered
+    console.log('da')
+  });
+</script>
+
+</html>
