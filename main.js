@@ -206,6 +206,11 @@ app.post('/sql/create/tables', verifyToken, (req, res) => {
   res.send('ok')
 })
 
+app.get('/sql/create/tables', verifyToken, (req, res) => {
+  db.createTables(req.dbconnection)
+  res.send('ok')
+})
+
 app.post('/sql/query', verifyToken, (req, res) => {
   try {
     req.dbconnection.query(req.body.query, (err, results) => {
