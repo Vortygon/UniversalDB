@@ -35,7 +35,7 @@ const createTablesQuery = fs.readFileSync('./sql/createTables.sql', 'utf-8')
 
 function createTables(connection) {
   const queries = [
-    'CREATE TABLE IF NOT EXISTS `productionTypes` ( \
+    'CREATE TABLE IF NOT EXISTS `productiontypes` ( \
       `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, \
       `name` VARCHAR(255) NOT NULL \
     );',
@@ -45,13 +45,13 @@ function createTables(connection) {
       `type` BIGINT UNSIGNED NOT NULL, \
       FOREIGN KEY (`type`) REFERENCES `productionTypes`(`id`) \
     );',
-    'CREATE TABLE IF NOT EXISTS `defectTypes` ( \
+    'CREATE TABLE IF NOT EXISTS `defecttypes` ( \
       `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, \
       `prod_type` BIGINT UNSIGNED NOT NULL, \
       `name` VARCHAR(255) NOT NULL, \
       FOREIGN KEY (`prod_type`) REFERENCES `productionTypes`(`id`) \
     );',
-    'CREATE TABLE IF NOT EXISTS `productionReady` ( \
+    'CREATE TABLE IF NOT EXISTS `productionready` ( \
       `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, \
       `product` BIGINT UNSIGNED NOT NULL, \
       `count` BIGINT NOT NULL, \
