@@ -37,7 +37,7 @@ let routes = {
   '/production': {
     template: 'sql_table',
     title: 'Учет готовой продукции',
-    table: 'productionReady',
+    table: 'productionready',
     perms: [1]
   },
   '/defects': {
@@ -55,13 +55,13 @@ let routes = {
   '/production_types': {
     template: 'sql_table',
     title: 'Типы продукции',
-    table: 'productionTypes',
+    table: 'productiontypes',
     perms: [3]
   },
   '/defect_types': {
     template: 'sql_table',
     title: 'Типы дефектов',
-    table: 'defectTypes',
+    table: 'defecttypes',
     perms: [3]
   },
   '/denied': {
@@ -234,30 +234,30 @@ app.get('/sql/:table', verifyToken, (req, res) => {
   let date_to = req.query?.to ?? toIsoString(new Date()).slice(0, 16)
 
   switch(req.params.table) {
-    case 'defectTypes':
+    case 'defecttypes':
       query = `
-        SELECT dt.id, pt.name as 'Тип продукции', dt.name as 'Дефект' FROM defectTypes dt
-        JOIN productionTypes pt
+        SELECT dt.id, pt.name as 'Тип продукции', dt.name as 'Дефект' FROM defecttypes dt
+        JOIN productiontypes pt
         ON dt.prod_type = pt.id
       `
       break
-    case 'productionTypes':
-      query = `SELECT id, name as 'Название' FROM productionTypes`
+    case 'productiontypes':
+      query = `SELECT id, name as 'Название' FROM productiontypes`
       break
     case 'production':
       query = `
         SELECT p.id, pt.name as 'Тип продукции', p.name as 'Название' FROM production p
-        JOIN productionTypes pt
+        JOIN productiontypes pt
         ON p.type = pt.id
       `
       break
-    case 'productionReady':
+    case 'productionready':
       query = `
         SELECT pr.id, pt.name as 'Тип продукции', p.name as 'Название',
         pr.count as 'Количество', DATE_FORMAT(pr.timestamp, '%Y-%m-%d&emsp;%H:%i:%s') as 'Время'
-        FROM productionReady pr
+        FROM productionready pr
         JOIN production p ON pr.product = p.id
-        JOIN productionTypes pt ON p.type = pt.id
+        JOIN productiontypes pt ON p.type = pt.id
         ORDER BY pr.timestamp
       `
       break
@@ -267,17 +267,17 @@ app.get('/sql/:table', verifyToken, (req, res) => {
         d.count as 'Количество', DATE_FORMAT(d.timestamp, '%Y-%m-%d&emsp;%H:%i:%s') as 'Время'
         FROM defects d
         JOIN production p ON d.product = p.id
-        JOIN productionTypes pt ON p.type = pt.id
-        JOIN defectTypes dt ON d.defect = dt.id
+        JOIN productiontypes pt ON p.type = pt.id
+        JOIN defecttypes dt ON d.defect = dt.id
         ORDER BY d.timestamp
       `
       break
-    case 'productionReadyCombined':
+    case 'productionreadyCombined':
       query = `
         SELECT pt.name as 'Тип продукции', p.name as 'Название',
-        SUM(pr.count) as 'Количество' FROM productionReady pr
+        SUM(pr.count) as 'Количество' FROM productionready pr
         JOIN production p ON pr.product = p.id
-        JOIN productionTypes pt ON p.type = pt.id
+        JOIN productiontypes pt ON p.type = pt.id
         
         GROUP BY pt.name, p.name
       `
@@ -287,8 +287,8 @@ app.get('/sql/:table', verifyToken, (req, res) => {
         SELECT pt.name as 'Тип продукции', p.name as 'Название', dt.name as 'Дефект',
         SUM(d.count) as 'Количество' FROM defects d
         JOIN production p ON d.product = p.id
-        JOIN productionTypes pt ON p.type = pt.id
-        JOIN defectTypes dt ON d.defect = dt.id
+        JOIN productiontypes pt ON p.type = pt.id
+        JOIN defecttypes dt ON d.defect = dt.id
         WHERE d.timestamp >= '2024-06-24 00:00:00' AND d.timestamp <= '2025-06-24 00:00:00'
         GROUP BY pt.name, p.name, dt.name
       `
