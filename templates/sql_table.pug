@@ -2,15 +2,19 @@ extends test
 
 block test_table
   table#sql_table(hx-get=`/sql/${table}`, hx-trigger="load")
+  script.
+
 
 block additional_table
-  table#sql_table2(hx-get=`/sql/${table}Combined`, hx-trigger="load")
+  table#sql_table2(hx-get=`/sql/${table}Combined`, hx-trigger="chain")
   script.
-    document.querySelector('#sql_table').addEventListener('change', () => {
-      alert('da')
-      //- await fetch("/sql/${table}Combined")
-      //- .then(res => {
-      //-   console.log('da', res)
-      //-   document.getElementById('sql_table2').innerHTML = res.body
-      //- })
+    document.getElementById('sql_table').addEventListener('htmx:load', () => {
+      //- alert('da')
+      date_from = document.getElementById('date_from').value
+      date_to = document.getElementById('date_to').value
+      if (date_from && date_to) {
+        htmx.ajax('GET', `/sql/#{table}Combined?from=${date_from}&to=${date_to}`, '#sql_table2')
+      } else {
+        htmx.trigger('#sql_table2', 'chain')
+      }
     })

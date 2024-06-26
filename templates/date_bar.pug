@@ -1,12 +1,13 @@
 if table == "productionready" || table == "defects"
 	hr
-	div#date_bar 
+	div#date_bar
 		div Период отчетности:
 		div от: 
 		input#date_from(type="datetime-local")
 		div до:
 		input#date_to(type="datetime-local")
-		button(hx-get=`/sql/${table}` hx-target="#sql_table") Составить отчет
+		button#report Составить отчет
+
 	script.
 		function toIsoString(date) {
 			var tzo = -date.getTimezoneOffset(),
@@ -25,6 +26,17 @@ if table == "productionready" || table == "defects"
 					':' + pad(Math.abs(tzo) % 60);
 		}
 
-		var dt = new Date();
-		document.getElementById('date_from').value = toIsoString(dt).slice(0, 16)
-		document.getElementById('date_to').value = toIsoString(dt).slice(0, 16)
+		report = document.getElementById('report')
+		date_from_picker = document.getElementById('date_from')
+		date_to_picker = document.getElementById('date_to')
+
+		dt = new Date();
+		date_from_picker.value = toIsoString(dt).slice(0, 11)+'00:00'
+		date_to_picker.value = toIsoString(dt).slice(0, 11)+'23:59'	
+
+		report.addEventListener('click', () => {
+			date_from = document.getElementById('date_from').value
+			date_to = document.getElementById('date_to').value
+			htmx.ajax('GET', `/sql/#{table}?from=${date_from}&to=${date_to}`, '#sql_table')
+			htmx.ajax('GET', `/sql/#{table}Combined?from=${date_from}&to=${date_to}`, '#sql_table2')
+		})

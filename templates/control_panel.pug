@@ -32,6 +32,7 @@ case table
         })
         document.getElementById('query_button_del').addEventListener('click', async (event) => {
           resetIncrement()
+          if (!query_del.value) query_del.value = 99999
           const response = await fetch("/sql/query", {
             method: 'POST',
             headers: {
@@ -105,6 +106,7 @@ case table
       })
       document.getElementById('query_button_del').addEventListener('click', async (event) => {
         resetIncrement()
+        if (!query_del.value) query_del.value = 99999
         const response = await fetch("/sql/query", {
           method: 'POST',
           headers: {
@@ -178,6 +180,7 @@ case table
         })
         document.getElementById('query_button_del').addEventListener('click', async (event) => {
           resetIncrement()
+          if (!query_del.value) query_del.value = 99999
           const response = await fetch("/sql/query", {
             method: 'POST',
             headers: {
@@ -203,12 +206,12 @@ case table
               option(value="1" selected hidden) Продукт
             input#query_input(type="text" placeholder="Количество")
             input#query_date(type="datetime-local")
-            button#query_button(hx-get=`/sql/${table}`) Добавить
+            button#query_button Добавить
         tr.inline
           td Удалить:
           td.inline Продукт
             input#query_input_del(type="text" placeholder="ID")
-            button#query_button_del(hx-get=`/sql/${table}`) Удалить
+            button#query_button_del Удалить
 
       script. 
         document.getElementById('query_date').value = toIsoString(new Date()).slice(0, 16)
@@ -287,9 +290,11 @@ case table
               VALUES (${query_drop2.value}, ${query.value}, '${timestamp}')
             `})
           })
+          htmx.ajax('GET', `/sql/#{table}?from=${date_from}&to=${date_to}`, '#sql_table')
         })
         document.getElementById('query_button_del').addEventListener('click', async (event) => {
           resetIncrement()
+          if (!query_del.value) query_del.value = 99999
           const response = await fetch("/sql/query", {
             method: 'POST',
             headers: {
@@ -300,6 +305,7 @@ case table
               WHERE id = ${query_del.value}
             `})
           })
+          htmx.ajax('GET', `/sql/#{table}?from=${date_from}&to=${date_to}`, '#sql_table')
         })
 
   when "defects"
@@ -426,9 +432,11 @@ case table
               VALUES (${query_drop2.value}, ${query.value}, ${query_drop3.value}, '${timestamp}')
             `})
           })
+          htmx.ajax('GET', `/sql/#{table}?from=${date_from}&to=${date_to}`, '#sql_table')
         })
         document.getElementById('query_button_del').addEventListener('click', async (event) => {
           resetIncrement()
+          if (!query_del.value) query_del.value = 99999
           const response = await fetch("/sql/query", {
             method: 'POST',
             headers: {
@@ -439,6 +447,7 @@ case table
               WHERE id = ${query_del.value}
             `})
           })
+          htmx.ajax('GET', `/sql/#{table}?from=${date_from}&to=${date_to}`, '#sql_table')
         })
     -break
 
@@ -455,6 +464,7 @@ if perms
         `})
       })
     }
+
     document.addEventListener('htmx:afterRequest', (e) => {
       resetIncrement()
     })

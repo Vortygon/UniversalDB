@@ -229,9 +229,12 @@ app.post('/sql/query', verifyToken, (req, res) => {
 })
 
 app.get('/sql/:table', verifyToken, (req, res) => {
-  let query
-  let date_from = req.query?.from ?? toIsoString(new Date()).slice(0, 16)
-  let date_to = req.query?.to ?? toIsoString(new Date()).slice(0, 16)
+  let query = req.query
+  let date_from = req.query?.from ?? toIsoString(new Date()).slice(0, 11)+'00:00'
+  let date_to = req.query?.to ?? toIsoString(new Date()).slice(0, 11)+'23:59'
+
+  console.log('testing', date_from, date_to)
+  console.log('query', query)
 
   switch(req.params.table) {
     case 'defecttypes':
@@ -258,6 +261,7 @@ app.get('/sql/:table', verifyToken, (req, res) => {
         FROM productionready pr
         JOIN production p ON pr.product = p.id
         JOIN productiontypes pt ON p.type = pt.id
+        WHERE pr.timestamp BETWEEN '${date_from}' AND '${date_to}'
         ORDER BY pr.timestamp
       `
       break
@@ -269,6 +273,7 @@ app.get('/sql/:table', verifyToken, (req, res) => {
         JOIN production p ON d.product = p.id
         JOIN productiontypes pt ON p.type = pt.id
         JOIN defecttypes dt ON d.defect = dt.id
+        WHERE d.timestamp BETWEEN '${date_from}' AND '${date_to}'
         ORDER BY d.timestamp
       `
       break
@@ -278,8 +283,9 @@ app.get('/sql/:table', verifyToken, (req, res) => {
         SUM(pr.count) as 'Количество' FROM productionready pr
         JOIN production p ON pr.product = p.id
         JOIN productiontypes pt ON p.type = pt.id
-        
+        WHERE pr.timestamp BETWEEN '${date_from}' AND '${date_to}'
         GROUP BY pt.name, p.name
+        ORDER BY pt.name
       `
       break
     case 'defectsCombined':
@@ -289,8 +295,9 @@ app.get('/sql/:table', verifyToken, (req, res) => {
         JOIN production p ON d.product = p.id
         JOIN productiontypes pt ON p.type = pt.id
         JOIN defecttypes dt ON d.defect = dt.id
-        WHERE d.timestamp >= '2024-06-24 00:00:00' AND d.timestamp <= '2025-06-24 00:00:00'
+        WHERE d.timestamp BETWEEN '${date_from}' AND '${date_to}'
         GROUP BY pt.name, p.name, dt.name
+        ORDER BY pt.name
       `
       break
     default:

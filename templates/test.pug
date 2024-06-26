@@ -18,7 +18,7 @@ div#content
 			option(value="xlsx") .xlsx
 			option(value="pdf") .pdf
 
-script. 
+script.
 	dropdown_download = document.getElementById('save_dropdown')
 	def_option = Array.from(dropdown_download).find(item => item.text === 'Формат');
 	dropdown_download.addEventListener('change', (event) => {
@@ -32,7 +32,7 @@ script.
 		})
 	}
 
-style. 
+style.
 	button {
 		width: fit-content;
 	}
